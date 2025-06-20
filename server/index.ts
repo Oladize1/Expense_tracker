@@ -1,10 +1,14 @@
 import express, {Request, Response} from 'express'
+import dotenv from 'dotenv'
+import cors from 'cors'
 const app = express()
+dotenv.config()
 const PORT = 4000
 
 import { authRouter } from './Routes/auth'
 
 app.use(express.json())
+app.use(cors())
 
 app.use('/api/auth', authRouter)
 
