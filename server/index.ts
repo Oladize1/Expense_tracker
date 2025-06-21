@@ -6,9 +6,10 @@ dotenv.config()
 const PORT = 4000
 
 import { connectDB } from './Utils/connectDB'
-import { authRouter } from './Routes/auth'
+import { authRouter } from './Routes/auth.route'
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 app.use('/api/auth', authRouter)
