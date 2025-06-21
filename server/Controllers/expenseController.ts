@@ -86,9 +86,25 @@ export const editExpense = async(req: Request, res: Response): Promise<Response>
     }
 }
 
-export const deleteExpense = async(_req: Request, res: Response): Promise<Response> => {
+export const deleteExpense = async(req: Request, res: Response): Promise<Response> => {
     try {
-       return res.send('Delete expense') 
+        const {Id} = req.params as {Id: string}
+        const userId = req.decodedToken
+        const user = await User.findById(userId)
+        const checKExistence = await Expense.findById(Id)
+        if (!checKExistence) {
+            return res.status(404).json({message: "Expense Not Found"})
+        }
+        if (!user) {
+            return res.status(404).json({message: "User Not Found"})
+        }
+        if (checKExistence.user.toString() !== userId) {
+            return res.status(401).json({message: "Unauthorized"})
+        }
+        await Expense.findByIdAndDelete(Id)
+        user.expenses = user.expenses.filter(exp => exp.toString() !== Id)
+        await user.save()
+       return res.status(200).json({message: "Deleted successfully"}) 
     } catch (error) {
         console.log(error);
         return res.status(500).json({message: "Error Deleting Expenses"})
