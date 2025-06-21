@@ -7,12 +7,14 @@ const PORT = 4000
 
 import { connectDB } from './Utils/connectDB'
 import { authRouter } from './Routes/auth.route'
+import { expenseRouter } from './Routes/expense.route'
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 app.use('/api/auth', authRouter)
+app.use('/api/expense', expenseRouter)
 
 app.get(("/test"), (_req: Request, res: Response) => {
     res.send("<h1>hello world tested</h1>")
