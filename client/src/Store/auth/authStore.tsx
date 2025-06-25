@@ -4,33 +4,35 @@ import { axiosInstance } from '../axiosInstance'
 interface User {
     isLoading: boolean,
     error:string | null,
-    authUser: {username : string, token : string} | null,
-    login: ({username, password} : {username: string, password: string}) => void,
-    register: ({username, password} : {username: string, password: string}) => void  
+    authUser: {email : string, token : string} | null,
+    login: ({email, password} : {email: string, password: string}) => void,
+    register: ({email, password} : {email: string, password: string}) => void  
 }
 
-export const authStore = create<User>((set) => ({
+export const useAuthStore = create<User>((set) => ({
     isLoading: false,
     error: null,
     authUser: null,
-    login: async ({username, password}) => {
+    login: async ({email, password}) => {
         set({isLoading: true, error: null})
         try {
-            const user = await axiosInstance.post('/auth/login', {username, password})
-            set({isLoading: false, error: null, authUser: user.data.username})
+            const user = await axiosInstance.post('/auth/login', {email, password})
+            console.log(user);        
+            set({isLoading: false, error: null, authUser: {email: user.data.email, token: user.data.token}})
         } catch (error: any) {
             console.log(error.data)
-            set({isLoading: false, error: error.data, authUser: null})
+            set({isLoading: false, error: error.response?.data?.message, authUser: null})
         }
     },
-    register: async({username, password}) => {
+    register: async({email, password}) => {
         set({isLoading: true, error: null})
         try {
-            const user = await axiosInstance.post('/auth/register', {username, password})
-            set({isLoading: false, error: null, authUser: {username: user.data.username, token: user.data.token}})
+            const user = await axiosInstance.post('/auth/register', {email, password})
+            console.log(user);
+            set({isLoading: false, error: null, authUser: {email: user.data.email, token: user.data.token}})
         } catch (error: any) {
             console.log(error.data);
-            set({isLoading:false, error: error.data, authUser: null})
+            set({isLoading:false, error: error.response?.data?.message, authUser: null})
         }
     }
 }))
