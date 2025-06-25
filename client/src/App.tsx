@@ -1,11 +1,14 @@
-import { Button } from "./components/ui/button"
-
+import {Routes, Route} from 'react-router-dom'
+import LoginPage from "./Pages/LoginPage"
+import RegisterPage from './Pages/RegisterPage'
 function App() {
 
   return (
     <>
-      <h1>Hello world</h1>
-      <Button>Click Test</Button>
+    <Routes>
+      <Route path='/login' element={<LoginPage/>}/>
+      <Route path='/signup' element={<RegisterPage/>}/>
+    </Routes>
     </>
   )
 }
