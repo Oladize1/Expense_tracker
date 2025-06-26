@@ -18,6 +18,11 @@ interface AuthFormProps extends React.ComponentProps<"div"> {
   type?: "login" | "signup"
 }
 
+type User = {
+  email: string,
+  password: string
+}
+
 export function AuthForm({
   className,
   type = "login",
@@ -34,10 +39,14 @@ export function AuthForm({
       return
     }
     try {
+      const user:User = {
+        email: email,
+        password: password
+      }
       if (type === 'login') {
-        await login({email, password})
+        login(user)
       } else if(type === 'signup'){
-        await register({email, password})
+        register(user)
       }
       setEmail('')
       setPassword('')
