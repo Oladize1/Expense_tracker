@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { toast } from "react-toast"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -15,11 +16,36 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { useExpenseStore } from "@/Store/Expense/expenseStore"
+
+const categories = ['Expense', 'Savings', 'Investment'] as const
+type Category = (typeof categories)[number]
 
 const SideBar = () => {
+  const [title, setTitle]= useState<string>('')
   const [amount, setAmount] = useState<number>(0)
-  const [transaction, setTransaction] = useState<string>('')
+  const [category, setCategory] = useState<Category>('Savings')
+  
+  const {createExpense} = useExpenseStore()
+
+  const handleAddExpense = (e: React.SyntheticEvent): Promise<void> => {
+    e.preventDefault()
+    if (!title || !category || !amount || amount <= 0 ) {
+      toast.error('Invalid data')
+      return Promise.resolve()
+    }
+    try {
+      createExpense({title, amount, category})
+      console.log(title, amount, category)
+      setTitle('')
+      setAmount(0)
+      setCategory('Savings')
+    } catch (error) {
+      console.log(error)
+    }
+    return Promise.resolve()
+  }
+
   return (
     <div className='w-1/4 h-3/4'>
       <div className="flex flex-col gap-6">
@@ -30,16 +56,15 @@ const SideBar = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form>
+            <form onSubmit={handleAddExpense}>
               <div className="flex flex-col gap-6">
-              <div className="grid gap-3 w-1/2">
+              <div className="grid gap-3">
                 <Label htmlFor="Transaction">Transaction</Label>
                 <Input
                   id="Transaction"
                   placeholder="Clothing"
-                  value={transaction}
-                  min={0}
-                  onChange={(e) => setTransaction((e.target.value))}
+                  value={title}
+                  onChange={(e) => setTitle((e.target.value))}
                   required
                 />
                 </div>
@@ -58,21 +83,17 @@ const SideBar = () => {
                 </div>
                 <div className="grid gap-3 w-1/2">
                   <Label htmlFor="category">Category</Label>
-                  <Select>
+                  <Select value={category} onValueChange={(value: Category) => setCategory(value)}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Catgeory" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Savings">Savings</SelectItem>
-                      <SelectItem value="Expense">Expense</SelectItem>
-                      <SelectItem value="Investment">Investment</SelectItem>
+                      {categories.map(category => (
+                        <SelectItem key={category} value={category}>{category}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="Description">Description</Label>
-                  <Textarea placeholder="Enter description..." id="Description"/>
                 </div>
                 <Button type="submit" className="w-full cursor-pointer">Add Expense</Button>
               </div>
