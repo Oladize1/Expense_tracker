@@ -1,5 +1,5 @@
 import express  from "express";
-import { loginUser, registerUser } from "../Controllers/authController";
+import { loginUser, registerUser, checkAuth } from "../Controllers/authController";
 import { asyncHandler } from "../Utils/helper";
 export const authRouter = express.Router()
 
@@ -8,3 +8,4 @@ export const authRouter = express.Router()
 
 authRouter.post('/login', asyncHandler(loginUser))
 authRouter.post('/register', asyncHandler(registerUser))
+authRouter.get('/checkAuth', asyncHandler(checkAuth))
