@@ -1,13 +1,15 @@
 import {create} from 'zustand'
 import { toast } from 'react-toast'
 import { axiosInstance } from '../axiosInstance'
+import type { Trophy } from 'lucide-react'
 
 interface User {
     isLoading: boolean,
     error:string | null,
     authUser: string | null,
     login: ({email, password} : {email: string, password: string}) => void,
-    register: ({email, password} : {email: string, password: string}) => void  
+    register: ({email, password} : {email: string, password: string}) => void,
+    checkAuth: () => void  
 }
 
 export const useAuthStore = create<User>((set) => ({
@@ -38,6 +40,15 @@ export const useAuthStore = create<User>((set) => ({
             toast.success('Register successfull')
         } catch (error: any) {
             console.log(error.data);
+            set({isLoading:false, error: error.response?.data?.message, authUser: null})
+            toast.error(error.response?.data?.message)
+        }
+    },
+    checkAuth: async() => {
+        try {
+            
+        } catch (error: any) {
+            console.log(error.data)
             set({isLoading:false, error: error.response?.data?.message, authUser: null})
             toast.error(error.response?.data?.message)
         }

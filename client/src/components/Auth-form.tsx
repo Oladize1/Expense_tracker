@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Link } from "react-router-dom"
-
+import { toast } from "react-toast"
 import { useState } from "react"
 import { useAuthStore } from "@/Store/auth/authStore"
 
@@ -50,8 +50,9 @@ export function AuthForm({
       }
       setEmail('')
       setPassword('')
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      toast.error(error)
     }
   }
 
