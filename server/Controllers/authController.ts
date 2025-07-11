@@ -61,8 +61,8 @@ export const registerUser = async (req: Request, res: Response): Promise<Respons
 export const checkAuth = async (req: Request, res: Response): Promise<Response> => {
     try {
         const userId = req.decodedToken
-        const user = await User.findById(userId)
-        return res.status(200).json(user)
+        const getUser = await User.findById(userId)
+        return res.status(200).json({user: getUser?.email})
     } catch (error) {
         console.log(error)
         return res.status(500).json({message: 'UnAuthorized User'})
