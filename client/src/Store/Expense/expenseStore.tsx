@@ -50,6 +50,7 @@ export const useExpenseStore = create<Expense>((set) => ({
                 error: null,
                 expenses: [...state.expenses, newExpense.data]
             }))
+            toast.success('Expense created Successfully')
         } catch (error: any) {
             console.log(error.data)
             set({isLoading: false, error: error.response?.data?.message, authUser: null})

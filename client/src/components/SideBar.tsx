@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { toast } from "react-toast"
+import { Loader2Icon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -26,7 +27,7 @@ const SideBar = () => {
   const [amount, setAmount] = useState<number>(0)
   const [category, setCategory] = useState<Category>('Savings')
   
-  const {createExpense} = useExpenseStore()
+  const {createExpense, isLoading} = useExpenseStore()
 
   const handleAddExpense = (e: React.SyntheticEvent): Promise<void> => {
     e.preventDefault()
@@ -47,7 +48,7 @@ const SideBar = () => {
   }
 
   return (
-    <div className='w-1/4 h-3/4'>
+    <div className='md:w-1/4 md:h-3/4'>
       <div className="flex flex-col gap-6">
         <Card>
           <CardHeader>
@@ -95,7 +96,10 @@ const SideBar = () => {
                   </Select>
                 </div>
                 </div>
-                <Button type="submit" className="w-full cursor-pointer">Add Expense</Button>
+                <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
+                  {isLoading && <Loader2Icon className="animate-spin" />}
+                  Add Expense
+                </Button>
               </div>
             </form>
           </CardContent>
