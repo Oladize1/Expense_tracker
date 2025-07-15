@@ -4,6 +4,7 @@ import SideBar from "@/components/SideBar"
 import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
 import { useExpenseStore } from "@/Store/Expense/expenseStore"
+import { toast } from "react-toast"
 
 const HomePage = () => {
   // const navigate = useNavigate()
@@ -16,7 +17,8 @@ const HomePage = () => {
   console.log(expenses)
   const handleLogout = () => {
     localStorage.removeItem('authUser')
-    
+    window.location.reload()
+    toast.success('Log out Successfully')
   }
   return (
     <>

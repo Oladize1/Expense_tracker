@@ -8,10 +8,10 @@ import HomePage from './Pages/HomePage'
 import { useAuthStore } from './Store/auth/authStore'
 
 function App() {
-const {authUser} = useAuthStore()
+const {checkAuth} = useAuthStore()
 useEffect(()=>{
-  
-},[authUser])
+  checkAuth()
+},[checkAuth])
   return (
     <>
     <ToastContainer position='top-center' delay={3000}/>
