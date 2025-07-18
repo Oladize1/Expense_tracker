@@ -1,13 +1,11 @@
 import MainContent from "@/components/MainContent"
 import SideBar from "@/components/SideBar"
-// import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
 import { useExpenseStore } from "@/Store/Expense/expenseStore"
 import { toast } from "react-toast"
 
 const HomePage = () => {
-  // const navigate = useNavigate()
   const {getAllExpenses, expenses, authUser} = useExpenseStore()
   useEffect(()=>{
     if (authUser) {

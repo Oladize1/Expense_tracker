@@ -26,11 +26,16 @@ const SideBar = () => {
   const [title, setTitle]= useState<string>('')
   const [amount, setAmount] = useState<number>(0)
   const [category, setCategory] = useState<Category>('Savings')
+  const [loading, setLoading] = useState(false)
   
   const {createExpense, isLoading} = useExpenseStore()
+  if (isLoading) {
+    return
+  }
 
   const handleAddExpense = (e: React.SyntheticEvent): Promise<void> => {
     e.preventDefault()
+    setLoading(true)
     if (!title || !category || !amount || amount <= 0 ) {
       toast.error('Invalid data')
       return Promise.resolve()
@@ -41,8 +46,10 @@ const SideBar = () => {
       setTitle('')
       setAmount(0)
       setCategory('Savings')
+      setLoading(false)
     } catch (error) {
       console.log(error)
+      setLoading(false)
     }
     return Promise.resolve()
   }
@@ -96,8 +103,8 @@ const SideBar = () => {
                   </Select>
                 </div>
                 </div>
-                <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
-                  {isLoading && <Loader2Icon className="animate-spin" />}
+                <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
+                  {loading && <Loader2Icon className="animate-spin" />}
                   Add Expense
                 </Button>
               </div>
