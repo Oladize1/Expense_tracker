@@ -15,6 +15,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/vite": "^4.1.10",
     "axios": "^1.10.0",
+    "chart": "^0.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.522.0",
@@ -23,6 +24,7 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.2",
     "react-toast": "^1.0.3",
+    "recharts": "^3.1.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
     "zustand": "^5.0.5"
