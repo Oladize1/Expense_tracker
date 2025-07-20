@@ -1,5 +1,14 @@
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
+"use client";
+
+import { TrendingUp } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  Tooltip,
+  XAxis,
+} from "recharts";
 
 import {
   Card,
@@ -8,62 +17,62 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/card";
+import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
+import { useExpenseStore } from "@/Store/Expense/expenseStore";
 
-export const description = "A bar chart with a label"
-
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
-
+// Chart config
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
+  amount: {
+    label: "Amount",
+    color: "#22c55e", // Tailwind's green-500
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function ChartBarLabel() {
+  const { expenses } = useExpenseStore();
+
+  // Aggregate totals by category
+  const result = { Expense: 0, Savings: 0, Investment: 0 };
+  expenses.forEach((expense) => {
+    const category = expense.category as keyof typeof result;
+    if (category in result) {
+      result[category] += Number(expense.amount);
+    }
+  });
+
+  // Prepare chart data
+  const chartData = [
+    { category: "Expense", amount: result.Expense },
+    { category: "Savings", amount: result.Savings },
+    { category: "Investment", amount: result.Investment },
+  ];
+
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>Bar Chart - Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Category Breakdown</CardTitle>
+        <CardDescription>Total Amounts</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
-            accessibilityLayer
+            width={500}
+            height={300}
             data={chartData}
-            margin={{
-              top: 20,
-            }}
+            margin={{ top: 20 }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="category"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
+            <Tooltip cursor={{ fill: "rgba(0, 0, 0, 0.05)" }} />
+            <Bar dataKey="amount" fill={chartConfig.amount.color} radius={8}>
               <LabelList
+                dataKey="amount"
                 position="top"
                 offset={12}
                 className="fill-foreground"
@@ -75,12 +84,12 @@ export function ChartBarLabel() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Tracking your expenses by category <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
+          Total values for Expense, Savings, and Investment
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

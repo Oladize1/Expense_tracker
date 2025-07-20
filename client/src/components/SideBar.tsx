@@ -22,26 +22,27 @@ import { useExpenseStore } from "@/Store/Expense/expenseStore"
 const categories = ['Expense', 'Savings', 'Investment'] as const
 type Category = (typeof categories)[number]
 
+type myBool = true | false
+
 const SideBar = () => {
   const [title, setTitle]= useState<string>('')
   const [amount, setAmount] = useState<number>(0)
   const [category, setCategory] = useState<Category>('Savings')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<myBool>(false)
   
-  const {createExpense, isLoading} = useExpenseStore()
-  if (isLoading) {
-    return
-  }
+  const {createExpense} = useExpenseStore()
 
-  const handleAddExpense = (e: React.SyntheticEvent): Promise<void> => {
+
+  const handleAddExpense = async (e: React.SyntheticEvent): Promise<void> => {
     e.preventDefault()
     setLoading(true)
     if (!title || !category || !amount || amount <= 0 ) {
       toast.error('Invalid data')
+      setLoading(false)
       return Promise.resolve()
     }
     try {
-      createExpense({title, amount, category})
+      await createExpense({title, amount, category})
       console.log(title, amount, category)
       setTitle('')
       setAmount(0)
@@ -104,8 +105,11 @@ const SideBar = () => {
                 </div>
                 </div>
                 <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
-                  {loading && <Loader2Icon className="animate-spin" />}
-                  Add Expense
+                  {
+                  loading ? (<Loader2Icon className="animate-spin" />)
+                  :
+                  ("Add Expense")
+                  }
                 </Button>
               </div>
             </form>

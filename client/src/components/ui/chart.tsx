@@ -13,15 +13,19 @@ export type ChartConfig = {
 
 interface ChartContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   config: ChartConfig
+  children: React.ReactNode
 }
 
 export function ChartContainer({
   config,
   className,
+  children,
   ...props
 }: ChartContainerProps) {
   return (
-    <div className={cn("w-full h-[300px] text-sm", className)} {...props} />
+    <div className={cn("w-full h-[300px] text-sm", className)} {...props}>
+      {children} {/* This was missing */}
+    </div>
   )
 }
 

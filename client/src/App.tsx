@@ -6,12 +6,16 @@ import RegisterPage from './Pages/RegisterPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import HomePage from './Pages/HomePage'
 import { useAuthStore } from './Store/auth/authStore'
+import { Spinner } from './components/ui/spinner'
 
 function App() {
-const {checkAuth} = useAuthStore()
+const {checkAuth, isLoading} = useAuthStore()
 useEffect(()=>{
   checkAuth()
 },[checkAuth])
+if (isLoading) {
+  return <Spinner/>
+}
   return (
     <>
     <ToastContainer position='top-center' delay={3000}/>
