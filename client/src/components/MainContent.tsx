@@ -21,7 +21,7 @@ const MainContent = () => {
       result[category] += Number(expense.amount);
     }
   });
-
+  console.log(expenses)
   const cards = [
     { label: "Total Expense", value: result.Expense, icon: <BsFillPieChartFill size={40} />, bg: "from-emerald-400 to-cyan-400" },
     { label: "Investment", value: result.Investment, icon: <FaChartLine size={40} />, bg: "from-emerald-400 to-cyan-400" },
@@ -47,6 +47,19 @@ const MainContent = () => {
       </div>
       <div className="w-full">
       <ChartBarLabel />
+      </div>
+      <div className="p-4 my-4">
+        <h2 className="text-center">History</h2>
+        <div className="flex items-center justify-between w-64 gap-2">
+        {expenses.map((expense => (
+          <div key={expense._id} className="rounded-2xl p-1">
+            <div className="flex justify-between items-center">
+              <h3>{expense.category}</h3>
+              <p>btn</p>
+            </div>
+        </div>
+        )))}
+        </div>
       </div>
     </div>
   );
