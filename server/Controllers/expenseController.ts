@@ -42,16 +42,31 @@ export const createExpense = async(req: Request, res: Response): Promise<Respons
         if (!user) {
             return res.status(404).json({message: "Invalid Token"})
         }
-        const newExpense = new Expense({
-            title: title.trim(),
-            amount: amount,
-            category: category,
-            user: user._id
+
+        const checkExpense = await Expense.findOne({
+            user: user._id,
+            category: category
         })
-        await newExpense.save().then(console.log).catch(console.error)
-        user.expenses.push(newExpense._id)
-        await user.save()
-        return res.status(201).json(newExpense)
+        if (checkExpense) {
+            checkExpense.amount += Number(amount)
+            await checkExpense.save()
+            return res.status(200).json({
+                message: "Expense Updated",
+                expense: checkExpense
+            })
+        } else {
+            const newExpense = new Expense({
+                title: title.trim(),
+                amount: amount,
+                category: category,
+                user: user._id
+            })
+            await newExpense.save().then(console.log).catch(console.error)
+            user.expenses.push(newExpense._id)
+            await user.save()
+            return res.status(201).json(newExpense)
+            
+        }
     } catch (error) {
         console.log(error)
         return res.status(500).json({message: "Error creating expense"})
